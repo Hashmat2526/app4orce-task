@@ -1,0 +1,12 @@
+module.exports = {
+  EXPRESS_SERVER_PORT: "3000",
+  JWT_SECRET: "3nczY9nfLt",
+  MONGODB_ATLAS_PASSWORD: "app4orce",
+  MONGODB_ATLAS_USERNAME: "app4orce",
+  ALLOWED_VALIDATION_SCHEMA_SCOPES: {
+    BODY: `BODY`,
+    PARAMS: `PARAMS`,
+    QUERY: `QUERY`,
+    NONE: `NONE`,
+  },
+};

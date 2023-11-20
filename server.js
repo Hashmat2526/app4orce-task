@@ -1,26 +1,16 @@
 const express = require("express");
 const app = express();
 const http = require("http");
-const path = require("path");
-const socket = require("./socket");
 const server = http.createServer(app);
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const { EXPRESS_SERVER_PORT } = require("./dependencies/config");
 const connection = require("./dependencies/connectiondb");
 const cors = require("cors");
-require("./cronJobs");
-const rateLimit = require("express-rate-limit");
-
-const limiter = rateLimit({
-  windowMs: 1 * 1000, // 1 sec
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again in a minute",
-});
 
 /* ROUTES */
-const UserRoutes = require("./api/routes/users.routes");
-const TaskManagerRoutes = require("./api/routes/tasks.routes");
+const userRoutes = require("./api/routes/users.routes");
+const TaskRoutes = require("./api/routes/tasks.routes");
 
 connection();
 
@@ -47,10 +37,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(limiter);
 /*  ROUTE */
-app.use("/tasks", TaskManagerRoutes);
-app.use("/users", UserRoutes);
+app.use("/tasks", TaskRoutes);
+app.use("/users", userRoutes);
 
 app.use((error, req, res, next) => {
   res.status(500).send({ error: error.message });
@@ -59,9 +48,5 @@ app.use((error, req, res, next) => {
 const port = EXPRESS_SERVER_PORT;
 
 server.listen(port, function () {
-  console.log(
-    `🚀🚀 server is up and running on port ${port} env ${process.env.MONITAIR_APP_ENV} 🚀🚀`
-  );
+  console.log(`🚀🚀 server is up and running on port ${port}  🚀🚀`);
 });
-
-socket.connect(server);
